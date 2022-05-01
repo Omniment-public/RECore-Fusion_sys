@@ -90,5 +90,8 @@ sudo ifconfig wlan0 up
 sudo chmod 646 /etc/hostapd/hostapd.conf
 sudo chmod 646 /etc/wpa_supplicant/wpa_supplicant.conf
 
-jupyter contrib nbextension install --user
-jupyter nbextensions_configurator enable --user
+# install pyrecore
+pip install pyrecore-0.0.0-py3-none-any.whl
+
+# jupyter contrib nbextension install --user
+# jupyter nbextensions_configurator enable --user
