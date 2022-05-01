@@ -91,7 +91,7 @@ sudo chmod 646 /etc/hostapd/hostapd.conf
 sudo chmod 646 /etc/wpa_supplicant/wpa_supplicant.conf
 
 # install pyrecore
-pip install /files/pyrecore-0.0.0-py3-none-any.whl
+pip install ./files/pyrecore-0.0.0-py3-none-any.whl
 
 # jupyter contrib nbextension install --user
 # jupyter nbextensions_configurator enable --user
