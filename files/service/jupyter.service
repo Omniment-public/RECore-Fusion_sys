@@ -1,0 +1,12 @@
+[Unit]
+Description=Jupyter notebook
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/jupyter notebook --config=/home/recore/.jupyter/jupyter_notebook_config.py
+User=recore
+Group=recore
+WorkingDirectory=/home/recore/jupyter
+
+[Install]
+WantedBy=multi-user.target
