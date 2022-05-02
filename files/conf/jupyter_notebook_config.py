@@ -422,7 +422,7 @@ c.NotebookApp.password = ''
 ## If True, display a button in the dashboard to quit (shutdown the notebook
 #  server).
 #  Default: True
-# c.NotebookApp.quit_button = True
+c.NotebookApp.quit_button = False
 
 ## (sec) Time window used to check the message and data rate limits.
 #  Default: 3
