@@ -42,20 +42,26 @@ sudo systemctl disable hostapd
 
 # setup jupyter
 echo "setup jupyter"
-# install jupyter extention
-pip install jupyter-contrib-nbextensions
 
 # make working dir
 sudo mkdir /home/recore/jupyter
+sudo chmod 777 ~/jupyter/
 
 # move jupyter service
 sudo mv ./files/service/jupyter.service /etc/systemd/system/
 jupyter notebook --generate-config -y
 sudo mv -f ./files/conf/jupyter_notebook_config.py /home/recore/.jupyter/
 
+# install pyrecore
+echo "install pyrecore"
+pip install ./files/pyrecore-0.0.0-py3-none-any.whl
+
 # enable jupyter
 sudo systemctl enable jupyter
 sudo service jupyter force-reload
+
+# install jupyter extention
+pip install jupyter-contrib-nbextensions
 
 # setup lighttpd
 echo "setup lighttpd"
@@ -95,9 +101,4 @@ sudo ifconfig wlan0 up
 sudo chmod 646 /etc/hostapd/hostapd.conf
 sudo chmod 646 /etc/wpa_supplicant/wpa_supplicant.conf
 
-# install pyrecore
-echo "install pyrecore"
-pip install ./files/pyrecore-0.0.0-py3-none-any.whl
-
-# jupyter contrib nbextension install --user
-# jupyter nbextensions_configurator enable --user
+sudo reboot
