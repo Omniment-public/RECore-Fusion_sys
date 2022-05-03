@@ -94,6 +94,10 @@ sudo chmod 777 /usr/local/bin/wlan_mode
 # move cgi files
 sudo mv ./files/cgi/* /usr/lib/cgi-bin/
 
+# move firmware files
+sudo mv ./files/RECore_uart_writer_noauto_aarc64 /usr/local/bin/
+sudo mv ./files/RECoreFusion_Firmware.ino.bin /usr/local/bin/
+
 # start wlan
 sudo ifconfig wlan0 up
 
