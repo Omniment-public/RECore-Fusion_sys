@@ -87,7 +87,7 @@
   font-family: 'Noto Sans JP', sans-serif;
 }
 
-.container-2 {
+.general_container {
   margin-top: 30px;
   margin-bottom: 30px;
 }
@@ -102,8 +102,8 @@
 }
 
 .menu_grid.config {
-  -ms-grid-columns: 1fr 1fr;
-  grid-template-columns: 1fr 1fr;
+  -ms-grid-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .pyrecore_menu_item {
@@ -187,7 +187,15 @@
   display: none;
 }
 
-.container-3 {
+.pop_menu.update {
+  display: none;
+}
+
+.pop_menu.write_firmware {
+  display: none;
+}
+
+.popmenu_container {
   padding-top: 50px;
   padding-bottom: 50px;
 }
@@ -222,6 +230,14 @@
   box-shadow: 14px 14px 18px -13px rgba(0, 0, 0, 0.5);
 }
 
+.popmenu_head.red {
+  color: #ff1e6c;
+}
+
+.popmenu_head.red.center {
+  text-align: center;
+}
+
 .popmenu_item {
   padding: 30px;
   -webkit-box-align: center;
@@ -254,30 +270,6 @@
   background-color: #000;
 }
 
-.item_ssid {
-  font-size: 25px;
-  line-height: 35px;
-}
-
-.sta_ssid_list {
-  overflow: auto;
-  max-height: 40vh;
-  padding-left: 20px;
-}
-
-.sta_ssid_list.setuped {
-  padding-left: 20px;
-}
-
-.list_ssid {
-  border-bottom: 1px solid #000;
-}
-
-.list_ssid.select {
-  background-color: #aafcff;
-  cursor: pointer;
-}
-
 .general_button {
   width: 200px;
   border-radius: 5px;
@@ -308,16 +300,6 @@
   justify-content: center;
 }
 
-.div-block-3 {
-  position: absolute;
-  left: 0%;
-  top: -80px;
-  right: 0%;
-  bottom: 0%;
-  display: none;
-  background-color: #000;
-}
-
 .div-block-4 {
   position: fixed;
   left: 0%;
@@ -344,11 +326,6 @@
   align-items: center;
 }
 
-.image {
-  margin-right: 50px;
-  margin-left: 50px;
-}
-
 .switch_heading {
   margin-right: 20px;
   margin-left: 20px;
@@ -359,12 +336,22 @@
   text-align: center;
 }
 
-.html-embed {
-  width: 500px;
+.version_text {
+  text-align: right;
+}
+
+.paragraph {
+  overflow: auto;
+  height: 100px;
 }
 
 @media screen and (max-width: 991px) {
   .menu_grid {
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .menu_grid.config {
     -ms-grid-columns: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
   }
@@ -406,11 +393,16 @@
 }
 
 @media screen and (max-width: 479px) {
-  .container-2 {
+  .general_container {
     margin-bottom: 50px;
   }
 
   .menu_grid {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+  }
+
+  .menu_grid.config {
     -ms-grid-columns: 1fr;
     grid-template-columns: 1fr;
   }
