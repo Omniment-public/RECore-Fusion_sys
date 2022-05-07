@@ -377,7 +377,7 @@ c.NotebookApp.ip = '*'
 
 ## ノートブックとカーネルが使うディレクトリ。
 #  Default: ''
-# c.NotebookApp.notebook_dir = ''
+c.NotebookApp.notebook_dir = '/home/recore/fusion-notebook'
 
 ## Whether to open in a browser after starting. The specific browser used is
 #  platform dependent and determined by the python standard library `webbrowser`

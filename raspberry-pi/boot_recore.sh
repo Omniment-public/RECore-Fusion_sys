@@ -8,7 +8,7 @@ echo 0 > /sys/class/gpio/gpio23/value
 echo 0 > /sys/class/gpio/gpio24/value
 
 #無線モード
-wlan_mode=$(</usr/local/bin/wlan_mode)
+wlan_mode=$(</usr/local/bin/recore/files/wlan_mode)
 sudo systemctl start dhcpcd
 
 if [ $wlan_mode=0 ]
