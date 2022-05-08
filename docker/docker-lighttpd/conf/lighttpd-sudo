@@ -1,1 +1,2 @@
 www-data   ALL=NOPASSWD:   /sbin/iwlist
+www-data   ALL=NOPASSWD:   /usr/bin/systemctl

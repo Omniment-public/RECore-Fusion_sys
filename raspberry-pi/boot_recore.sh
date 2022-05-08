@@ -10,6 +10,8 @@ echo 0 > /sys/class/gpio/gpio24/value
 #無線モード
 wlan_mode=$(</usr/local/bin/recore/files/wlan_mode)
 sudo systemctl start dhcpcd
+sudo iwconfig wlan0 power off
+sudo python /usr/local/bin/recore/files/wlan_autochannel.py
 
 if [ $wlan_mode=0 ]
 then
@@ -22,7 +24,7 @@ then
 	#sudo systemctl start dhcpcd
 
 	#接続確認
-	sleep 15
+	sleep 10
 
 	wlan_state=`iwgetid`
 	echo "$wlan_state"
@@ -34,14 +36,15 @@ if [ $wlan_state="" ]
 then
 	#AP処理
 	echo "AP Mode"
-	sudo python /usr/local/bin/wlan_autochannel.py
 	sudo systemctl stop wpa_supplicant
 	sudo systemctl stop dhcpcd
+	#sudo ifconfig wlan0 up
 	sudo systemctl start dnsmasq
 	sudo systemctl start hostapd
 	sudo ip addr flush dev wlan0
+	sudo ip route add 192.168.5.1 dev wlan0
 	sudo ip addr add 192.168.5.1 dev wlan0
-	sudo ip route add default via 192.168.5.1 dev wlan0
+	
 	echo 1 > /sys/class/gpio/gpio23/value
 	echo 1 > /sys/class/gpio/gpio24/value
 else

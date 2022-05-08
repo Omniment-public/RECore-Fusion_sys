@@ -22,6 +22,7 @@ RUN apt-get install -qy unzip
 RUN apt-get install -qy python3
 RUN apt-get install -qy lighttpd
 RUN apt-get install -qy wireless-tools
+RUN apt-get install -qy systemctl
 
 # move config file
 RUN lighttpd-enable-mod cgi

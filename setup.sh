@@ -68,9 +68,16 @@ sudo mv ./raspberry-pi/wlan_autochannel.py /usr/local/bin/recore/files/
 sudo sh -c "echo 0 >> '/usr/local/bin/recore/files/wlan_mode'"
 sudo chmod 777 /usr/local/bin/recore/files/wlan_mode
 
+sudo mv ./raspberry-pi/config/kill-all-containers.service /etc/systemd/system/
+sudo systemctl enable kill-all-containers.service
+sudo systemctl start kill-all-containers.service
+
 sudo chmod 666 /etc/hostapd/hostapd.conf
 sudo chmod 666 /etc/wpa_supplicant/wpa_supplicant.conf
 sudo chmod 666 /etc/hosts
 sudo chmod 666 /etc/hostname
+
+# setup wlan0
+sudo ifconfig wlan0 up
 
 sudo reboot

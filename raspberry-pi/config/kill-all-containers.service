@@ -1,0 +1,13 @@
+[Unit]
+Description=containerd-shim v2 workaround
+Before=docker.service
+Requires=containerd.service
+After=containerd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStop=-/bin/bash -c 'docker ps --format '{{.ID}}' | xargs docker kill'
+
+[Install]
+WantedBy=containerd.service
