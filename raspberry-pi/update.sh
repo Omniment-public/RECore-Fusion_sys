@@ -2,34 +2,32 @@
 
 # アップデータ確認
 UPDATE_DIR="/usr/local/bin/recore/update"
+FUSION_DIR="/usr/local/bin/recore/files"
+
 UPDATER_ARCHIVE="/usr/local/bin/recore/update/update.tar.gz"
 UPDATER_README="/usr/local/bin/recore/update/README.md"
-UPDATER_SETUP="/usr/local/bin/recore/update/setup.sh"
+UPDATER_INSATLLER="/usr/local/bin/recore/update/install.sh"
 
 UPDATE_STATE="/usr/local/bin/recore/update/update_state"
 SYS_VERSION="/usr/local/bin/recore/files/version"
 UPDATE_VERSION="/usr/local/bin/recore/update/update_version"
-
-FUSION_FILES="/usr/local/bin/recore/files"
+SYS_FILES="/usr/local/bin/recore/update/raspberry-pi"
 
 if [ -e $UPDATER_ARCHIVE ]; then
 	echo "Find Update"
 	sudo tar -zxvf $UPDATER_ARCHIVE -C $UPDATE_DIR --strip-components 1
 	
+	cd $UPDATE_DIR
 	sudo rm $UPDATER_ARCHIVE
 	sudo rm $UPDATER_README
-	sudo rm $UPDATER_SETUP
-	
-	echo "check system updater"
-	SYS_UPDATER="/usr/local/bin/recore/update/updater.sh"
-	SYS_FILES="/usr/local/bin/recore/update/raspberry-pi"
 
 	SYS_UPDATED=0
-	if [ -e $SYS_UPDATER ]; then
+	if [ -e $UPDATER_INSATLLER ]; then
 		echo "run update"
-		bash $FUSION_FILES/blink.sh &
-		sudo bash $SYS_UPDATER
-		sudo rm $SYS_UPDATER
+		bash $FUSION_DIR/blink.sh &
+		sudo bash $UPDATER_INSATLLER
+		sudo rm $UPDATER_INSATLLER
+		sudo rm $UPDATER_INSATLLER
 		SYS_UPDATED=1
   	fi
 
@@ -49,7 +47,7 @@ DOCKER_FILES="/usr/local/bin/recore/update/docker"
 
 if [ -e $DOCKER_SETUP ]; then
 	echo "run docker setup"
-	bash $FUSION_FILES/blink.sh &
+	bash $FUSION_DIR/blink.sh &
 	sudo bash $DOCKER_SETUP
 	sudo rm $DOCKER_SETUP
 	sudo rm -rf $DOCKER_FILES
@@ -66,7 +64,6 @@ if [ -e $UPDATE_STATE ]; then
 		echo "update complete"
 		#write version
 		sudo echo $(<$UPDATE_VERSION) > '/usr/local/bin/recore/files/version'
-		sudo rm $UPDATE_STATE
-		sudo rm $UPDATE_VERSION
+		sudo rm $UPDATE_DIR/*
 	fi
 fi

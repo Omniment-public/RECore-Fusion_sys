@@ -23,7 +23,5 @@ import requests
 
 response = requests.get('https://api.github.com/repos/Omniment-public/RECore-Fusion_sys/tarball/v0.0.0')
 
-
-
 with open('update.tar.gz', 'wb') as f:
     f.write(response.content)

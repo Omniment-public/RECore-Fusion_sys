@@ -30,6 +30,7 @@ COPY ./conf/lighttpd.conf /etc/lighttpd/
 COPY ./conf/10-cgi.conf /etc/lighttpd/conf-available/
 COPY ./conf/lighttpd-sudo /etc/sudoers.d/
 RUN chown root /etc/sudoers.d/lighttpd-sudo
+RUN chmod 440 /etc/sudoers.d/lighttpd-sudo
 
 # move html file
 COPY ./web/ /var/www/html/

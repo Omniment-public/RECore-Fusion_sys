@@ -2,7 +2,10 @@
 
 VERSION='v0.0.0'
 
-FUSION_FILES=/usr/local/bin/recore/files
+FUSION_DIR="/usr/local/bin/recore/files"
+UPDATE_DIR="/usr/local/bin/recore/update"
+
+cd $UPDATE_DIR
 
 # apt upgrade
 echo "update apt-get"
@@ -38,64 +41,55 @@ sudo apt-get -qy install unzip
 sudo apt-get -qy install vim
 
 sudo apt-get -qy install docker.io
-sudo usermod -aG docker $USER
+#sudo usermod -aG docker $USER
+sudo usermod -aG docker recore
 
 # disable hostapd
 echo "disable hostapd"
 sudo systemctl unmask hostapd
 sudo systemctl disable hostapd
 
-# setup jupyter
-echo "setup jupyter"
+# make dir
+echo "make dir"
 
 # make working dir
 mkdir /home/recore/fusion-files
 mkdir /home/recore/fusion-files/fusion-notebook
 mkdir /home/recore/fusion-files/site-package
-sudo chmod 777 ~/fusion-files/*
+sudo chmod 777 /home/recore/fusion-files/*
+
+sudo mkdir /usr/local/bin/recore
+sudo mkdir $FUSION_DIR
+sudo mkdir /usr/local/bin/recore/update
+sudo chmod 777 /usr/local/bin/recore/*
 
 # move files
 echo "move files"
 #move sys file
-sudo mkdir /usr/local/bin/recore
-sudo mkdir $FUSION_FILES
-sudo mkdir /usr/local/bin/recore/update
-sudo chmod 777 $FUSION_FILES
-sudo chmod 777 /usr/local/bin/recore/update
+sudo mv -f ./raspberry-pi/boot_recore.sh $FUSION_DIR
+sudo mv -f ./raspberry-pi/update.sh $FUSION_DIR
+sudo mv -f ./raspberry-pi/config/rc.local /etc/
+sudo chmod +x $FUSION_DIR/boot_recore.sh
+sudo chmod +x /etc/rc.local
 
-sudo mv -f ./raspberry-pi/boot_recore.sh $FUSION_FILES
-sudo mv -f ./raspberry-pi/update.sh $FUSION_FILES
+sudo mv ./raspberry-pi/blink.sh $FUSION_DIR
+sudo chmod +x $FUSION_DIR/blink.sh
+
 sudo mv -f ./raspberry-pi/config/hostapd.conf /etc/hostapd
 sudo mv -f ./raspberry-pi/config/dnsmasq.conf /etc/
-sudo mv -f ./raspberry-pi/config/rc.local /etc/
-sudo chmod +x /etc/rc.local
-sudo chmod +x $FUSION_FILES/boot_recore.sh
 
-sudo mv ./raspberry-pi/wlan_autochannel.py $FUSION_FILES
-sudo echo 0 > $FUSION_FILES'/wlan_mode'
-sudo chmod 777 $FUSION_FILES/wlan_mode
+sudo mv ./raspberry-pi/wlan_autochannel.py $FUSION_DIR
+sudo echo 0 > $FUSION_DIR'/wlan_mode'
+sudo chmod 777 $FUSION_DIR/wlan_mode
 
-sudo echo $VERSION > $FUSION_FILES'/version'
-sudo chmod 774 $FUSION_FILES/version
+sudo echo $VERSION > $FUSION_DIR'/version'
+sudo chmod 774 $FUSION_DIR/version
 
 sudo mv ./raspberry-pi/config/kill-all-containers.service /etc/systemd/system/
 sudo systemctl enable kill-all-containers.service
 sudo systemctl start kill-all-containers.service
 
-sudo mv ./raspberry-pi/blink.sh $FUSION_FILES
-sudo chmod +x $FUSION_FILES/blink.sh
-
 sudo chmod 666 /etc/hostapd/hostapd.conf
 sudo chmod 666 /etc/wpa_supplicant/wpa_supplicant.conf
 sudo chmod 666 /etc/hosts
 sudo chmod 666 /etc/hostname
-
-# setup wlan0
-sudo ifconfig wlan0 up
-
-# insall docker file
-sudo mv setup_docker.sh /usr/local/bin/recore/update
-sudo mv docker/ /usr/local/bin/recore/update/docker/
-sudo echo $VERSION > '/usr/local/bin/recore/update/update_version'
-
-sudo reboot
