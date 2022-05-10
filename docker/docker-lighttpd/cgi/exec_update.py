@@ -15,6 +15,11 @@ read_version.close()
 state_json = []
 
 if LooseVersion(latest_version) > LooseVersion(sys_version) :
+	update_file = requests.get(latest_link)
+	save_update = open('/usr/local/bin/recore/update/update.tar.gz',mode='wb')
+	save_update.write(update_file.content)
+	save_update.close()
+
 	state_json.append({'status':'true'})
 	state_json.append({'version':latest_version})
 else:
