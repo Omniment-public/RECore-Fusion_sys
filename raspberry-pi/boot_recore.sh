@@ -57,3 +57,6 @@ else
 	echo 1 > $LED_GREEN_VAL
 	echo 0 > $LED_RED_VAL
 fi
+
+docker start lighttpd
+docker start jupyter
