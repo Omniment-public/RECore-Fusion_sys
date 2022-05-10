@@ -9,9 +9,6 @@ echo "out" > /sys/class/gpio/gpio24/direction
 echo 0 > $LED_GREEN_VAL
 echo 0 > $LED_RED_VAL
 
-# アップデータ確認
-sudo bash /usr/local/bin/recore/files/update.sh
-
 #無線モード
 wlan_mode=$(</usr/local/bin/recore/files/wlan_mode)
 sudo systemctl start dhcpcd
@@ -37,6 +34,9 @@ else
 	echo "Skip STA"
 	wlan_state=""
 fi
+
+# アップデータ確認
+sudo bash /usr/local/bin/recore/files/update.sh
 
 if [ $wlan_state="" ]
 then

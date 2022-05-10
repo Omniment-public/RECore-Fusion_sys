@@ -63,7 +63,8 @@ if [ -e $UPDATE_STATE ]; then
 	then
 		echo "update complete"
 		#write version
-		sudo echo $(<$UPDATE_VERSION) > '/usr/local/bin/recore/files/version'
+		sudo echo $(<$UPDATE_VERSION) > $SYS_VERSION
+		sudo chmod 777 $SYS_VERSION
 		sudo rm $UPDATE_DIR/*
 	fi
 fi

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-VERSION='v0.0.0'
-
 FUSION_DIR="/usr/local/bin/recore/files"
 UPDATE_DIR="/usr/local/bin/recore/update"
 
@@ -81,9 +79,6 @@ sudo mv -f ./raspberry-pi/config/dnsmasq.conf /etc/
 sudo mv ./raspberry-pi/wlan_autochannel.py $FUSION_DIR
 sudo echo 0 > $FUSION_DIR'/wlan_mode'
 sudo chmod 777 $FUSION_DIR/wlan_mode
-
-sudo echo $VERSION > $FUSION_DIR'/version'
-sudo chmod 774 $FUSION_DIR/version
 
 sudo mv ./raspberry-pi/config/kill-all-containers.service /etc/systemd/system/
 sudo systemctl enable kill-all-containers.service
