@@ -20,9 +20,13 @@ RUN apt-get install -qy vim
 RUN apt-get install -qy wget
 RUN apt-get install -qy unzip
 RUN apt-get install -qy python3
+RUN apt-get install -qy python3-pip
 RUN apt-get install -qy lighttpd
 RUN apt-get install -qy wireless-tools
 RUN apt-get install -qy systemctl
+
+RUN pip install -U pip
+RUN pip install requests
 
 # move config file
 RUN lighttpd-enable-mod cgi

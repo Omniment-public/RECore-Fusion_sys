@@ -99,4 +99,4 @@ RUN jupyter nbextension enable pyrecore-notebook/extension --user
 COPY ./jupyter_notebook_config.py /home/recore/.jupyter/
 
 #docker build -t jupyter-recore .
-#docker run -d --privileged -v /dev:/dev -v /home/recore/fusion-files/fusion-notebook:/home/recore/fusion-notebook -v /home/recore/.local/lib/python3.9/site-packages:/home/recore/fusion-files/site-package -p8888:8888 --restart=always --name jupyter recore-jupyter jupyter notebook
+#docker run -d --privileged -v /dev:/dev -v /home/recore/fusion-files/fusion-notebook:/home/recore/fusion-notebook -v /home/recore/fusion-files/site-package:/home/recore/.local/lib/python3.9/site-packages -p8888:8888 --restart=always --name jupyter recore-jupyter jupyter notebook
