@@ -19,26 +19,14 @@ if [ -e $UPDATER_ARCHIVE ]; then
 	
 	cd $UPDATE_DIR
 	sudo rm $UPDATER_ARCHIVE
-	sudo rm $UPDATER_README
 
-	SYS_UPDATED=0
-	if [ -e $UPDATER_INSATLLER ]; then
-		echo "run update"
-		bash $FUSION_DIR/blink.sh &
-		sudo bash $UPDATER_INSATLLER
-		sudo rm $UPDATER_INSATLLER
-		sudo rm $UPDATER_INSATLLER
-		SYS_UPDATED=1
-  	fi
+	echo "run update"
+	bash $FUSION_DIR/blink.sh &
+	sudo bash $UPDATER_INSATLLER
 
-	sudo rm -rf $SYS_FILES
-	echo $SYS_UPDATED
-
-	if [ $SYS_UPDATED -eq 1 ]; then
-		sudo echo 1 > '/usr/local/bin/recore/update/update_state'
-		echo "reboot"
-		sudo reboot
-	fi
+	sudo echo 1 > '/usr/local/bin/recore/update/update_state'
+	echo "reboot"
+	sudo reboot
 fi
 
 # dockerセットアップ確認
@@ -50,7 +38,6 @@ if [ -e $DOCKER_SETUP ]; then
 	bash $FUSION_DIR/blink.sh &
 	sudo bash $DOCKER_SETUP
 	sudo rm $DOCKER_SETUP
-	sudo rm -rf $DOCKER_FILES
 	sudo echo 1 > '/usr/local/bin/recore/update/update_state'
 	sudo reboot
 fi
@@ -65,6 +52,6 @@ if [ -e $UPDATE_STATE ]; then
 		#write version
 		sudo echo $(<$UPDATE_VERSION) > $SYS_VERSION
 		sudo chmod 777 $SYS_VERSION
-		sudo rm $UPDATE_DIR/*
+		sudo rm -rf $UPDATE_DIR/*
 	fi
 fi
