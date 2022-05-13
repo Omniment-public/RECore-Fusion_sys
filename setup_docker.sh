@@ -4,8 +4,14 @@ DOCKER_FILES="/usr/local/bin/recore/update/docker"
 # stop and remove old container
 docker rm -f jupyter lighttpd
 
-docker build -t lighttpd-recore $DOCKER_FILES/docker-lighttpd
-docker build -t jupyter-recore $DOCKER_FILES/docker-jupyter
+#docker build -t lighttpd-recore:"v0.0.0" $DOCKER_FILES/docker-lighttpd
+#docker build -t jupyter-recore:"v0.0.0" $DOCKER_FILES/docker-jupyter
+
+docker build -t recore-lighttpd:"v0.0.0" .
+docker build -t recore-jupyter:"v0.0.0" .
+
+docker save recore-lighttpd:"v0.0.0" -o "recore-lighttpd-image.tar"
+docker save recore-jupyter:"v0.0.0" -o "recore-jupyter-image.tar"
 
 docker image prune -f
 

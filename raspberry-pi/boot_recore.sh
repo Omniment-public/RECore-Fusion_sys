@@ -58,5 +58,5 @@ else
 	echo 0 > $LED_RED_VAL
 fi
 
-docker start lighttpd
-docker start jupyter
+docker start recore-lighttpd
+docker start recore-jupyter
