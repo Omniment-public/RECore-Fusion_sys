@@ -94,3 +94,6 @@ chmod 766 /etc/hostapd/hostapd.conf
 chmod 766 /etc/wpa_supplicant/wpa_supplicant.conf
 chmod 766 /etc/hosts
 chmod 766 /etc/hostname
+
+# swap bluetooth uart port
+sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/config.txt"
