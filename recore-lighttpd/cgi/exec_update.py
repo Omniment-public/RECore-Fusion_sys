@@ -9,6 +9,7 @@ app_dir='/usr/local/bin/recore/files/app'
 app_list = os.listdir(path=app_dir)
 
 update_list = {}
+exec_list = []
 
 for app_name in app_list:
 	app_file = open('/usr/local/bin/recore/files/app/'+app_name,mode='r')
@@ -22,30 +23,59 @@ for app_name in app_list:
 		update_list[app_name] = "Error"
 		break
 	
-	data = response.json()
+	if(response.status_code == 200) :
+		latest_resp = response.json()
+	else :
+		update_list[app_name] = "Error"
+		break
+	
 	try :
-		latest_version = data["tag_name"]
-		latest_link = data["tarball_url"]
+		assets_url = latest_resp["assets_url"]
+		latest_version = latest_resp["tag_name"]
 	except :
 		update_list[app_name] = "Error"
 		break
 	
-	if LooseVersion(latest_version) > LooseVersion(version) :
-		# exec update
-		try :
-			subprocess.run("sudo mkdir /usr/local/bin/recore/install/" + app_name,shell=True)
-			subprocess.run("sudo curl -l -o installer.tar.gz " + latest_link, shell = True)
-			subprocess.run("sudo bash -c \"echo " + app_name + " >> /usr/local/bin/recore/install/install_queue\"", shell=True)
-			subprocess.run("sudo bash -c \"echo recore-jupyter >> /usr/local/bin/recore/install/install_queue\"", shell=True)
-		except :
-			update_list[app_name] = "Error"
+	try :
+		assets_resp = requests.get(assets_url)
+	except :
+		update_list[app_name] = "Error"
+		break
+	
+	installer_url = ""
+	assets_json = assets_resp.json()
+	for assets_dict in assets_json :
+		if(app_name+'-'+latest_version + '.tar.gz' in assets_dict.values()) :
+			installer_url = assets_dict['url']
 			break
-		#update_file = requests.get(latest_link)
-		#save_update = open('/usr/local/bin/recore/update/update.tar.gz',mode='wb')
-		#save_update.write(update_file.content)
-		#save_update.close()
+	
+	#if(installer_url != ""):
+	#	dl_dir = "/usr/local/bin/recore/install/"+app_name
+	#	os.mkdir(dl_dir)
+	#	subprocess.run("sudo curl -l -o " + dl_dir + "installer.tar.gz " + installer_url, shell = True)
+	#	queue = open('/usr/local/bin/recore/install/install_queue',mode='a')
+	#	queue.write(app_name)
+	#	queue.close()
+	#	break
+	#else:
+	#	update_list[app_name] = "Error"
+
+	if LooseVersion(latest_version) > LooseVersion(version) :
+		if(installer_url != ""):
+			dl_dir = "/usr/local/bin/recore/install/"+app_name
+			os.mkdir(dl_dir)
+			subprocess.run("sudo curl -Lo " + dl_dir + "/installer.tar.gz " + "-H 'Accept: application/octet-stream' " + installer_url, shell = True)
+			exec_list.append(app_name)
+			break
+		else:
+			update_list[app_name] = "Error"
 	else :
 		update_list[app_name] = "latest"
-	
-	print(update_list)
 
+queue = open('/usr/local/bin/recore/install/install_queue',mode='w')
+for exec_app in exec_list :
+	queue.write(exec_app + "\n")
+
+queue.close()
+
+print(update_list)

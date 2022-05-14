@@ -21,7 +21,12 @@ for app_name in app_list:
 		update_list[app_name] = "Error"
 		break
 	
-	data = response.json()
+	if(response.status_code == 200) :
+		data = response.json()
+	else :
+		update_list[app_name] = "Error"
+		break
+	
 	try:
 		latest_version = data["tag_name"]
 	except:
@@ -32,28 +37,5 @@ for app_name in app_list:
 		update_list[app_name] = version
 	else :
 		update_list[app_name] = "latest"
-	
-	print(update_list)
 
-response = requests.get('https://api.github.com/repos/Omniment-public/RECore-Fusion_sys/releases/latest')
-data = response.json()
-
-latest_version = data["tag_name"]
-latest_link = data["tarball_url"]
-
-read_version = open('/usr/local/bin/recore/files/version',mode='r')
-sys_version = read_version.read()
-read_version.close()
-
-state_json = []
-
-if LooseVersion(latest_version) > LooseVersion(sys_version) :
-	state_json.append({'status':'true'})
-	state_json.append({'version':latest_version})
-else:
-	state_json.append({'status':'false'})
-	state_json.append({'version':latest_version})
-
-print(state_json)
-
-response = requests.get('https://api.github.com/repos/Omniment-public/RECore-arduino_tinydfu_tools/releases/latest')
+print(update_list)
