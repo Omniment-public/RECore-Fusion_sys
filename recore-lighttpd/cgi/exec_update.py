@@ -66,7 +66,7 @@ for app_name in app_list:
 			os.mkdir(dl_dir)
 			subprocess.run("sudo curl -Lo " + dl_dir + "/installer.tar.gz " + "-H 'Accept: application/octet-stream' " + installer_url, shell = True)
 			exec_list.append(app_name)
-			break
+			update_list.append({'app_name':app_name,'version':latest_version})
 		else:
 			update_list.append({'app_name':app_name,'version':'Error'})
 	else :

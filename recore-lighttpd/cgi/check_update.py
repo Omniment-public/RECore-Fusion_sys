@@ -34,7 +34,7 @@ for app_name in app_list:
 		break
 	
 	if LooseVersion(latest_version) > LooseVersion(version) :
-		update_list.append({'app_name':app_name,'version':version})
+		update_list.append({'app_name':app_name,'version':latest_version})
 	else :
 		update_list.append({'app_name':app_name,'version':'latest'})
 
