@@ -1,0 +1,5 @@
+www-data   ALL=NOPASSWD:   /sbin/iwlist
+www-data   ALL=NOPASSWD:   /usr/bin/systemctl
+www-data   ALL=NOPASSWD:   /bin/mkdir
+www-data   ALL=NOPASSWD:   /usr/bin/curl
+www-data   ALL=NOPASSWD:   /usr/local/bin/recore/recore-firmware/RECore_uart_writer_silent_aarc64

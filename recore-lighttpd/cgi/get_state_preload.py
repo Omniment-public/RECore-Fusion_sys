@@ -6,7 +6,7 @@ conf = open('/etc/hostapd/hostapd.conf',mode='r')
 read_conf = conf.read()
 conf.close()
 
-ssid = re.search('ssid=.*\n',read_conf).group().strip('"').replace('ssid=','')
+ssid = re.search('ssid=.*\n',read_conf).group().rstrip().replace('ssid=','')
 
 # hostname load
 conf = open('/etc/hostname',mode='r')
