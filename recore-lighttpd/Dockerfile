@@ -54,7 +54,7 @@ RUN echo "" > /usr/local/bin/recore/install/install_queue
 # copy recore firmware
 RUN mkdir /usr/local/bin/recore/recore-firmware/
 COPY ./firmware/ /usr/local/bin/recore/recore-firmware/
-RUN chmod +x /usr/local/bin/recore/recore-firmware/RECore_uart_writer_noauto_aarc64
+RUN chmod +x /usr/local/bin/recore/recore-firmware/RECore_uart_writer_silent_aarc64
 
 # set permission
 RUN chmod 766 /etc/hosts
