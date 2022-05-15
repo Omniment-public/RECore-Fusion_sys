@@ -13,6 +13,7 @@ write_firm_link = 'write_firmware.py';
 check_update_link = 'check_update.py'
 exec_update_link = 'exec_update.py'
 update_receive = false;
+update_running = false;
 reboot_link = 'reboot.py'
 
 get_state_preload_link = 'get_state_preload.py';
@@ -232,47 +233,51 @@ window.onload = function(){
 	}
 
 	document.getElementById('start_update_button').onclick = function(){
-		if(update_receive == false){
-			//アップデート確認
-			document.getElementById('update_status').textContent = "アップデートの確認中……\r\n"
-			fetch(cgi_link + check_update_link).then(function(res){
-				if(res.ok){
-					res.json().then(data =>{
-						result = data;
-						console.log(result);
-						for (const state of result) {
-							console.log(state);
-							if(state['version'] != 'latest'){
-								document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' の ' + state['version'] + ' アップデートが見つかりました。\r\n</p>');
-								update_receive = true;
-							}else if(state['version'] == 'Error'){
-								document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' でエラーが発生しています。\r\n</p>');
-							}else{
-								document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + 'は最新版です。\r\n</p>');
+		if(update_running == false){
+			if(update_receive == false){
+				//アップデート確認
+				document.getElementById('update_status').textContent = "アップデートの確認中……\r\n"
+				fetch(cgi_link + check_update_link).then(function(res){
+					if(res.ok){
+						res.json().then(data =>{
+							result = data;
+							console.log(result);
+							for (const state of result) {
+								console.log(state);
+								if(state['version'] != 'latest'){
+									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' の ' + state['version'] + ' アップデートが見つかりました。\r\n</p>');
+									update_receive = true;
+								}else if(state['version'] == 'Error'){
+									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' でエラーが発生しています。\r\n</p>');
+								}else{
+									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + 'は最新版です。\r\n</p>');
+								}
 							}
-						}
-					})
+						})
+					}
+				})
+				if(update_receive == true){
+					document.getElementById('start_update_button').textContent = "アップデート実行\r\n"
 				}
-			})
-			if(update_receive == true){
-				document.getElementById('start_update_button').textContent = "アップデート実行\r\n"
+			}else{
+				//アップデート実行
+				update_running = true;
+				document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>アップデートを実行します。\r\n</p>');
+				document.getElementById('start_update_button').textContent = "アップデート中\r\n"
+				document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>アップデートをダウンロード中……\r\n</p>');
+				fetch(cgi_link + exec_update_link).then(function(res){
+					if(res.ok){
+						res.json().then(data =>{
+							result = data;
+							console.log(result);
+							document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>ダウンロードが完了しました。\r\n</p>');
+							document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>再起動を行います。\r\n</p>');
+							fetch(cgi_link + reboot_link).then(function(res){})
+							
+						})
+					}
+				})
 			}
-		}else{
-			//アップデート実行
-			document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>アップデートを実行します。\r\n</p>');
-			document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>アップデートをダウンロード中……\r\n</p>');
-			fetch(cgi_link + exec_update_link).then(function(res){
-				if(res.ok){
-					res.json().then(data =>{
-						result = data;
-						console.log(result);
-						document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>ダウンロードが完了しました。\r\n</p>');
-						document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>再起動を行います。\r\n</p>');
-						fetch(cgi_link + reboot_link).then(function(res){})
-						
-					})
-				}
-			})
 		}
 	}
 }
