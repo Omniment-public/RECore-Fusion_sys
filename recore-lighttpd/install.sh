@@ -5,7 +5,7 @@ NAME="RECore-Fusion_sys"
 APP_NAME="recore-lighttpd"
 IMG_NAME="recore-lighttpd-image.tar.gz"
 REPO_INFO="Omniment-public/RECore-Fusion_sys"
-VERSION="v0.0.1"
+VERSION="v0.0.2"
 
 SYS_DIR="/usr/local/bin/recore/files"
 INSTALL_FILES="/usr/local/bin/recore/install/"$NAME"/"$APP_NAME
