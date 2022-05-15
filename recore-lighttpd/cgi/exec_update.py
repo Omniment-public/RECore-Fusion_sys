@@ -8,7 +8,7 @@ import subprocess
 app_dir='/usr/local/bin/recore/files/app'
 app_list = os.listdir(path=app_dir)
 
-update_list = {}
+update_list = []
 exec_list = []
 
 for app_name in app_list:
@@ -20,26 +20,26 @@ for app_name in app_list:
 	try :
 		response = requests.get('https://api.github.com/repos/'+repo+'/releases/latest')
 	except :
-		update_list[app_name] = "Error"
+		update_list.append({'app_name':app_name,'version':'Error'})
 		break
 	
 	if(response.status_code == 200) :
 		latest_resp = response.json()
 	else :
-		update_list[app_name] = "Error"
+		update_list.append({'app_name':app_name,'version':'Error'})
 		break
 	
 	try :
 		assets_url = latest_resp["assets_url"]
 		latest_version = latest_resp["tag_name"]
 	except :
-		update_list[app_name] = "Error"
+		update_list.append({'app_name':app_name,'version':'Error'})
 		break
 	
 	try :
 		assets_resp = requests.get(assets_url)
 	except :
-		update_list[app_name] = "Error"
+		update_list.append({'app_name':app_name,'version':'Error'})
 		break
 	
 	installer_url = ""
@@ -68,9 +68,9 @@ for app_name in app_list:
 			exec_list.append(app_name)
 			break
 		else:
-			update_list[app_name] = "Error"
+			update_list.append({'app_name':app_name,'version':'Error'})
 	else :
-		update_list[app_name] = "latest"
+		update_list.append({'app_name':app_name,'version':'latest'})
 
 queue = open('/usr/local/bin/recore/install/install_queue',mode='w')
 for exec_app in exec_list :
@@ -78,4 +78,4 @@ for exec_app in exec_list :
 
 queue.close()
 
-print(update_list)
+print(json.dumps(update_list), end= '')
