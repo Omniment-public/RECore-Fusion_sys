@@ -247,6 +247,7 @@ window.onload = function(){
 								if(state['version'] != 'latest'){
 									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' の ' + state['version'] + ' アップデートが見つかりました。\r\n</p>');
 									update_receive = true;
+									document.getElementById('start_update_button').textContent = "アップデート実行\r\n"
 								}else if(state['version'] == 'Error'){
 									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' でエラーが発生しています。\r\n</p>');
 								}else{
@@ -256,9 +257,6 @@ window.onload = function(){
 						})
 					}
 				})
-				if(update_receive == true){
-					document.getElementById('start_update_button').textContent = "アップデート実行\r\n"
-				}
 			}else{
 				//アップデート実行
 				update_running = true;
