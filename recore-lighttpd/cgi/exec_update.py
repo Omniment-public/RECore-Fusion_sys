@@ -12,6 +12,7 @@ update_list = []
 exec_list = []
 
 for app_name in app_list:
+	err_state = False
 	app_file = open('/usr/local/bin/recore/files/app/'+app_name,mode='r')
 	app_info = app_file.read()
 	app_file.close()
@@ -21,26 +22,26 @@ for app_name in app_list:
 		response = requests.get('https://api.github.com/repos/'+repo+'/releases/latest')
 	except :
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
+		continue
 	
 	if(response.status_code == 200) :
 		latest_resp = response.json()
 	else :
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
+		continue
 	
 	try :
 		assets_url = latest_resp["assets_url"]
 		latest_version = latest_resp["tag_name"]
 	except :
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
+		continue
 	
 	try :
 		assets_resp = requests.get(assets_url)
 	except :
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
+		continue
 	
 	installer_url = ""
 	assets_json = assets_resp.json()
@@ -72,9 +73,10 @@ for app_name in app_list:
 			update_list.append({'app_name':app_name,'version':latest_version})
 		else:
 			update_list.append({'app_name':app_name,'version':'Error'})
+			continue
 	else :
 		update_list.append({'app_name':app_name,'version':'latest'})
-
+	
 queue = open('/usr/local/bin/recore/install/install_queue',mode='w')
 for exec_app in exec_list :
 	queue.write(exec_app + "\n")

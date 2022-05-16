@@ -10,6 +10,7 @@ app_list = os.listdir(path=app_dir)
 update_list = []
 
 for app_name in app_list:
+	err_state = False
 	app_file = open('/usr/local/bin/recore/files/app/'+app_name,mode='r')
 	app_info = app_file.read()
 	app_file.close()
@@ -19,19 +20,19 @@ for app_name in app_list:
 		response = requests.get('https://api.github.com/repos/'+repo+'/releases/latest')
 	except :
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
+		continue
 	
 	if(response.status_code == 200) :
 		data = response.json()
 	else :
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
-
+		continue
+	
 	try:
 		latest_version = data["tag_name"]
 	except:
 		update_list.append({'app_name':app_name,'version':'Error'})
-		break
+		continue
 	
 	if LooseVersion(latest_version) > LooseVersion(version) :
 		update_list.append({'app_name':app_name,'version':latest_version})
