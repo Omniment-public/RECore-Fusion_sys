@@ -78,7 +78,10 @@ mv -f $INSTALL_DIR/raspberry-pi/boot_recore.sh $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/update.sh $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/blink.sh $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/config/rc.local /etc/
+mv -f $INSTALL_DIR/raspberry-pi/config/sysctl.conf /etc/
 mv -f $INSTALL_DIR/raspberry-pi/wlan_autochannel.py $SYS_DIR
+mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.ap.conf $SYS_DIR
+mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.sta.conf $SYS_DIR
 
 mv -f $INSTALL_DIR/raspberry-pi/config/hostapd.conf /etc/hostapd
 mv -f $INSTALL_DIR/raspberry-pi/config/dnsmasq.conf /etc/

@@ -15,10 +15,16 @@ sudo systemctl start dhcpcd
 sudo iwconfig wlan0 power off
 sudo python /usr/local/bin/recore/files/wlan_autochannel.py
 
+ETH_STATUS=$(sudo ifconfig eth0 | grep inet)
+
 if [ $wlan_mode = 0 ]
 then
 	#STA立ち上げ
 	echo "STA Mode"
+	cp /usr/local/bin/recore/files/dhcpcd.sta.conf /etc/dhcpcd.conf
+	sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+	service dhcpcd restart
+
 	sudo systemctl stop hostapd
 	sudo systemctl stop dnsmasq
 	sudo ip addr flush dev wlan0
@@ -40,17 +46,27 @@ sudo bash /usr/local/bin/recore/files/update.sh
 
 if [ $wlan_state="" ]
 then
-	#AP処理
+	# AP処理
 	echo "AP Mode"
 	sudo systemctl stop wpa_supplicant
-	sudo systemctl stop dhcpcd
+	#sudo systemctl stop dhcpcd
 	#sudo ifconfig wlan0 up
 	sudo systemctl start dnsmasq
 	sudo systemctl start hostapd
 	sudo ip addr flush dev wlan0
-	sudo ip route add 192.168.5.1 dev wlan0
-	sudo ip addr add 192.168.5.1 dev wlan0
-	
+	#sudo ip addr add 192.168.5.1 dev wlan0
+
+	if [ $ETH_STATUS = "" ]; then
+		# AP スタンドアローンモード
+		sudo ip route add default via 192.168.5.1 dev wlan0
+	else
+		# AP ルーターモード
+		cp /usr/local/bin/recore/files/dhcpcd.ap.conf /etc/dhcpcd.conf
+		sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+		sudo service dhcpcd restart
+		sudo systemctl restart hostapd.service
+	fi
+
 	echo 1 > $LED_GREEN_VAL
 	echo 1 > $LED_RED_VAL
 else
