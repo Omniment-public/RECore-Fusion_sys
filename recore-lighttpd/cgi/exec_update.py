@@ -63,7 +63,10 @@ for app_name in app_list:
 	if LooseVersion(latest_version) > LooseVersion(version) :
 		if(installer_url != ""):
 			dl_dir = "/usr/local/bin/recore/install/"+app_name
-			os.mkdir(dl_dir)
+			try :
+				os.mkdir(dl_dir)
+			except :
+				pass
 			subprocess.run("sudo curl -Lo " + dl_dir + "/installer.tar.gz " + "-H 'Accept: application/octet-stream' " + installer_url, shell = True)
 			exec_list.append(app_name)
 			update_list.append({'app_name':app_name,'version':latest_version})
