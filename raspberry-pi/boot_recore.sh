@@ -54,10 +54,10 @@ then
 	sudo systemctl start dnsmasq
 	sudo systemctl start hostapd
 	sudo ip addr flush dev wlan0
-	#sudo ip addr add 192.168.5.1 dev wlan0
 
 	if [ $ETH_STATUS = "" ]; then
 		# AP スタンドアローンモード
+		sudo ip addr add 192.168.5.1 dev wlan0
 		sudo ip route add default via 192.168.5.1 dev wlan0
 	else
 		# AP ルーターモード
