@@ -29,6 +29,7 @@ window.onload = function(){
 				document.getElementById("ap_ssid").value = ap_data[0]["ap_ssid"];
 				document.getElementById("hostname").value = ap_data[1]["hostname"];
 				document.getElementById("nav_id").textContent = ap_data[1]["hostname"];
+				document.getElementById("text_version").textContent = ap_data[2]["sys_version"]
 			})
 		}
 	})
