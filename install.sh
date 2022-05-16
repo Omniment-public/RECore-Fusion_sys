@@ -3,7 +3,7 @@
 
 NAME="RECore-Fusion_sys"
 NAME_APP="recore-lighttpd"
-VERSION="v0.0.3"
+VERSION="v0.0.4"
 REPO_INFO="Omniment-public/RECore-Fusion_sys"
 
 SYS_DIR="/usr/local/bin/recore/files"
