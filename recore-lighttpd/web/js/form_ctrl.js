@@ -238,9 +238,9 @@ window.onload = function(){
 			if(update_receive == false){
 				//アップデート確認
 				document.getElementById('update_status').textContent = "アップデートの確認中……\r\n"
-				fetch(cgi_link + check_update_link).then(function(res){
-					if(res.ok){
-						res.json().then(data =>{
+				fetch(cgi_link + check_update_link).then(function(res_check){
+					if(res_check.ok){
+						res_check.json().then(data =>{
 							result = data;
 							console.log(result);
 							for (const state of result) {
@@ -266,14 +266,14 @@ window.onload = function(){
 				document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>アップデートを実行します。\r\n</p>');
 				document.getElementById('start_update_button').textContent = "アップデート中\r\n"
 				document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>アップデートをダウンロード中……\r\n</p>');
-				fetch(cgi_link + exec_update_link).then(function(res){
-					if(res.ok){
-						res.json().then(data =>{
+				fetch(cgi_link + exec_update_link).then(function(res_exec){
+					if(res_exec.ok){
+						res_exec.json().then(data =>{
 							result = data;
 							console.log(result);
 							document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>ダウンロードが完了しました。\r\n</p>');
 							document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>再起動を行います。\r\n</p>');
-							fetch(cgi_link + reboot_link).then(function(res){})
+							fetch(cgi_link + reboot_link).then(function(res_reboot){})
 							
 						})
 					}else{
