@@ -52,7 +52,7 @@ then
 	sudo systemctl start dnsmasq
 	sudo systemctl start hostapd
 	sudo ip addr flush dev wlan0
-	#sudo ip addr add 192.168.5.1 dev wlan0
+	sudo ip addr add 192.168.5.1 dev wlan0
 
 	cp /usr/local/bin/recore/files/dhcpcd.ap.conf /etc/dhcpcd.conf
 	sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
