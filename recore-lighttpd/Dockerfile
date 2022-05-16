@@ -56,11 +56,5 @@ RUN mkdir /usr/local/bin/recore/recore-firmware/
 COPY ./firmware/ /usr/local/bin/recore/recore-firmware/
 RUN chmod +x /usr/local/bin/recore/recore-firmware/RECore_uart_writer_silent_aarc64
 
-# set permission
-RUN chmod 766 /etc/hosts
-RUN chmod 766 /etc/hostname
-RUN chmod 777 /usr/local/bin/recore/install
-RUN chmod 777 /usr/local/bin/recore/install/install_queue
-
 #docker build -t lighttpd-recore .
 #docker run -d --name lighttpd --restart=always --net=host --privileged -p 80:80  -v /etc/hostname:/etc/hostname -v /usr/local/bin/recore/files:/usr/local/bin/recore/files -v /usr/local/bin/recore/updater:/usr/local/bin/recore/updater -v /etc/hostapd/hostapd.conf:/etc/hostapd/hostapd.conf -v /etc/wpa_supplicant/wpa_supplicant.conf:/etc/wpa_supplicant/wpa_supplicant.conf lighttpd-recore lighttpd -f /etc/lighttpd/lighttpd.conf -D

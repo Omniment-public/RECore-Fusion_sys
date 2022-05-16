@@ -245,35 +245,39 @@ window.onload = function(){
 							console.log(result);
 							for (const state of result) {
 								console.log(state);
-								if(state['version'] != 'latest'){
-									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' の ' + state['version'] + ' アップデートが見つかりました。\r\n</p>');
+								if(state['version'] == 'Error'){
+									document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>' + state['app_name'] + ' でエラーが発生しています。\r\n</p>');
+								}else if(state['version'] != 'latest'){
+									document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>' + state['app_name'] + ' の ' + state['version'] + ' アップデートが見つかりました。\r\n</p>');
 									update_receive = true;
 									document.getElementById('start_update_button').textContent = "アップデート実行\r\n"
-								}else if(state['version'] == 'Error'){
-									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + ' でエラーが発生しています。\r\n</p>');
 								}else{
-									document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>' + state['app_name'] + 'は最新版です。\r\n</p>');
+									document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>' + state['app_name'] + 'は最新版です。\r\n</p>');
 								}
 							}
 						})
+					}else{
+						document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>エラーが発生しました。\r\n</p>');
 					}
 				})
 			}else{
 				//アップデート実行
 				update_running = true;
-				document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>アップデートを実行します。\r\n</p>');
+				document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>アップデートを実行します。\r\n</p>');
 				document.getElementById('start_update_button').textContent = "アップデート中\r\n"
-				document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>アップデートをダウンロード中……\r\n</p>');
+				document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>アップデートをダウンロード中……\r\n</p>');
 				fetch(cgi_link + exec_update_link).then(function(res){
 					if(res.ok){
 						res.json().then(data =>{
 							result = data;
 							console.log(result);
-							document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>ダウンロードが完了しました。\r\n</p>');
-							document.getElementById('update_status').insertAdjacentHTML('beforeend', '<p>再起動を行います。\r\n</p>');
+							document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>ダウンロードが完了しました。\r\n</p>');
+							document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>再起動を行います。\r\n</p>');
 							fetch(cgi_link + reboot_link).then(function(res){})
 							
 						})
+					}else{
+						document.getElementById('update_status').insertAdjacentHTML('afterbegin', '<p>エラーが発生しました。\r\n</p>');
 					}
 				})
 			}
