@@ -5,7 +5,7 @@ NAME="RECore-Fusion_sys"
 APP_NAME="recore-lighttpd"
 IMG_NAME="recore-lighttpd-image.tar.gz"
 REPO_INFO="Omniment-public/RECore-Fusion_sys"
-VERSION="v0.0.2"
+VERSION="v0.0.3"
 
 SYS_DIR="/usr/local/bin/recore/files"
 INSTALL_FILES="/usr/local/bin/recore/install/"$NAME"/"$APP_NAME
@@ -43,6 +43,6 @@ if [ $RUN_STATE = 1 ];then
 	sudo bash -c "echo $REPO_INFO > $INFO_DIR'/repo_info'"
 	sudo bash -c "echo $VERSION > $INFO_DIR'/version'"
 else
-	docker rename $APP_NAME $APP_NAME"_"
+	docker rename $APP_NAME"_" $APP_NAME
 	docker start $APP_NAME
 fi
