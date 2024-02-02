@@ -101,3 +101,4 @@ chmod 777 /usr/local/bin/recore/install
 
 # swap bluetooth uart port
 sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/config.txt"
+sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/firmware/config.txt"
