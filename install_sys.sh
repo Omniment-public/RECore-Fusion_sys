@@ -33,7 +33,7 @@ apt-get -qy install fonts-noto-cjk
 # install pip
 echo "update pip"
 apt-get -y install python3-pip
-pip install -U pip
+pip install --break-system-packages -U pip
 
 # install apps
 echo "install apps"
