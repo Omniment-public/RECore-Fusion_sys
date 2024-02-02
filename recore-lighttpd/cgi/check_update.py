@@ -1,6 +1,6 @@
 import requests
 import json
-from distutils.version import LooseVersion, StrictVersion
+from packaging import version
 import os
 import re
 
@@ -14,7 +14,7 @@ for app_name in app_list:
 	app_file = open('/usr/local/bin/recore/files/app/'+app_name,mode='r')
 	app_info = app_file.read()
 	app_file.close()
-	version = re.search('version=.*\n',app_info).group().rstrip().replace('version=','').replace('"','')
+	get_version = re.search('version=.*\n',app_info).group().rstrip().replace('version=','').replace('"','')
 	repo = re.search('repo=.*\n',app_info).group().rstrip().replace('repo=','').replace('"','')
 	try :
 		response = requests.get('https://api.github.com/repos/'+repo+'/releases/latest')
@@ -34,7 +34,7 @@ for app_name in app_list:
 		update_list.append({'app_name':app_name,'version':'Error'})
 		continue
 	
-	if LooseVersion(latest_version) > LooseVersion(version) :
+	if version.parse(latest_version) > version.parse(get_version) :
 		update_list.append({'app_name':app_name,'version':latest_version})
 	else :
 		update_list.append({'app_name':app_name,'version':'latest'})
