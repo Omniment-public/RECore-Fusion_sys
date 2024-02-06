@@ -23,7 +23,7 @@ apt -qy install locales-all
 raspi-config nonint do_change_locale ja_JP.UTF-8
 raspi-config nonint do_change_timezone Asia/Tokyo
 raspi-config nonint do_wifi_country JP
-raspi-config nonint do_serial 2
+raspi-config nonint do_serial_cons 2
 
 # install fonts
 echo "install fonts"
