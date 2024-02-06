@@ -28,4 +28,7 @@ sudo ./recore-lighttpd/build_release.sh $1
 echo "move package"
 mv ./recore-lighttpd/recore-lighttpd-image.tar.gz ./$RELEASEDIR/recore-lighttpd
 
+echo "compress package"
+tar -zcvf "RECore-Fusion_sys-"$1".tar.gz" $RELEASEDIR
+
 echo "complete release package make"
