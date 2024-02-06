@@ -100,5 +100,11 @@ chmod 766 /etc/hostname
 chmod 777 /usr/local/bin/recore/install
 
 # swap bluetooth uart port
+# config shutdown button
+# write old system
 sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/config.txt"
+sudo bash -c "echo 'dtoverlay=gpio-shutdown,gpio_pin=18,debounce=2000' >> /boot/config.txt"
+
+# write new system
 sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/firmware/config.txt"
+sudo bash -c "echo 'dtoverlay=gpio-shutdown,gpio_pin=18,debounce=2000' >> /boot/firmware/config.txt"
