@@ -31,6 +31,10 @@ if [ $INSTALL_STEP = 0 ]; then
 	echo "install system"
 	bash $INSTALL_DIR/install_sys.sh
 	sudo bash -c "echo 1 > $INSTALL_DIR/install_step"
+
+	# continue
+	exit 2
+	
 	reboot
 else
 	# lighttpd docker setup

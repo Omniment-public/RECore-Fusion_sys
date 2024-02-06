@@ -24,6 +24,11 @@ if [ ! $INSTALL_NAME = "" ]; then
 
 		echo "Run Updater"
 		sudo bash $INSTALL_DIR/$INSTALL_NAME/install.sh
+		if [ $? -eq 2 ]; then
+			echo "continue install"
+			sudo reboot
+			exit 0
+		fi
 
 		echo "update finish"
 	fi
