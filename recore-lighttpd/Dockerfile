@@ -25,8 +25,9 @@ RUN apt-get install -qy apt-utils locales locales-all sudo git vim wget unzip py
 #RUN apt-get install -qy wireless-tools
 #RUN apt-get install -qy systemctl
 
-RUN pip install -U pip
-RUN pip install requests
+RUN pip install --break-system-packages -U pip
+RUN pip install --break-system-packages requests
+RUN pip install --break-system-packages packaging
 
 # move config file
 RUN lighttpd-enable-mod cgi

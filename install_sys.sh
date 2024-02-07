@@ -13,39 +13,39 @@ if [ ! "$(id -u)" = 0 ]; then
 fi
 
 # apt upgrade
-echo "update apt-get"
-apt-get -y update
-apt-get -y upgrade
+echo "update apt"
+apt -y update
+apt -y upgrade
 
 # init raspi confing
 echo "init raspi config"
-apt-get -qy install locales-all
+apt -qy install locales-all
 raspi-config nonint do_change_locale ja_JP.UTF-8
 raspi-config nonint do_change_timezone Asia/Tokyo
 raspi-config nonint do_wifi_country JP
-raspi-config nonint do_serial 2
+raspi-config nonint do_serial_cons 2
 
 # install fonts
 echo "install fonts"
-apt-get -qy install fonts-ipaexfont
-apt-get -qy install fonts-noto-cjk
+apt -qy install fonts-ipaexfont
+apt -qy install fonts-noto-cjk
 
 # install pip
 echo "update pip"
-apt-get -y install python3-pip
-pip install -U pip
+apt -y install python3-pip
+pip install --break-system-packages -U pip
 
 # install apps
 echo "install apps"
-apt-get -qy install hostapd
-apt-get -qy install dnsmasq
-apt-get -qy install ifmetric
+apt -qy install hostapd
+apt -qy install dnsmasq
+apt -qy install ifmetric
 
-apt-get -qy install git
-apt-get -qy install unzip
-apt-get -qy install vim
+apt -qy install git
+apt -qy install unzip
+apt -qy install vim
 
-apt-get -qy install docker.io
+apt -qy install docker.io
 #sudo usermod -aG docker $USER
 usermod -aG docker recore
 
@@ -100,5 +100,11 @@ chmod 766 /etc/hostname
 chmod 777 /usr/local/bin/recore/install
 
 # swap bluetooth uart port
+# config shutdown button
+# write old system
 sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/config.txt"
+sudo bash -c "echo 'dtoverlay=gpio-shutdown,gpio_pin=18,debounce=2000' >> /boot/config.txt"
+
+# write new system
 sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/firmware/config.txt"
+sudo bash -c "echo 'dtoverlay=gpio-shutdown,gpio_pin=18,debounce=2000' >> /boot/firmware/config.txt"
