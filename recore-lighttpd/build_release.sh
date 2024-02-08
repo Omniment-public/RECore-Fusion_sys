@@ -18,4 +18,4 @@ docker save recore-lighttpd:$1 -o "recore-lighttpd-image.tar"
 
 # compress
 echo "compress"
-tar -zcvf recore-lighttpd-image.tar.gz recore-lighttpd-image.tar
+gzip recore-lighttpd-image.tar

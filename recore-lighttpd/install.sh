@@ -30,6 +30,7 @@ docker rename $APP_NAME $APP_NAME"_"
 docker stop $APP_NAME"_"
 
 # load new image
+sudo chmod 777 $INSTALL_FILES/$IMG_NAME
 docker load -i $INSTALL_FILES/$IMG_NAME
 
 RUN_STATE=0
