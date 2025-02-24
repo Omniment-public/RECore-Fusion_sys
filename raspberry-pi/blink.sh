@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 LED_GREEN_VAL=23
 
