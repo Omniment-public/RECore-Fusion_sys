@@ -14,12 +14,12 @@ fi
 
 # apt upgrade
 echo "update apt"
-apt -y update
-apt -y upgrade
+apt-get -qy update
+apt-get -qy upgrade
 
 # init raspi confing
 echo "init raspi config"
-apt -qy install locales-all
+apt-get -qy install locales-all
 raspi-config nonint do_change_locale ja_JP.UTF-8
 raspi-config nonint do_change_timezone Asia/Tokyo
 raspi-config nonint do_wifi_country JP
@@ -27,25 +27,23 @@ raspi-config nonint do_serial_cons 2
 
 # install fonts
 echo "install fonts"
-apt -qy install fonts-ipaexfont
-apt -qy install fonts-noto-cjk
+apt-get -qy install fonts-ipaexfont
+apt-get -qy install fonts-noto-cjk
 
 # install pip
 echo "update pip"
-apt -y install python3-pip
+apt-get -y install python3-pip
 pip install --break-system-packages -U pip
 
 # install apps
 echo "install apps"
-apt -qy install hostapd
-apt -qy install dnsmasq
-apt -qy install ifmetric
+apt-get -qy install hostapd dnsmasq ifmetric
 
-apt -qy install git
-apt -qy install unzip
-apt -qy install vim
+apt-get -qy install git unzip vim
 
-apt -qy install docker.io
+apt-get -qy install imx500-all
+
+apt-get -qy install docker.io
 #sudo usermod -aG docker $USER
 usermod -aG docker recore
 
