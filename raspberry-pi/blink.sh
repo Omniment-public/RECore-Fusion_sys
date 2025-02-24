@@ -1,10 +1,12 @@
 #!bin/bash
 
-LED_GREEN_VAL="/sys/class/gpio/gpio23/value"
+LED_GREEN_VAL=23
+
+pinctrl set $LED_GREEN_VAL op dl
 
 while : ;do
-	echo 1 > $LED_GREEN_VAL
+	pinctrl set $LED_GREEN_VAL op dh
 	sleep 1
-	echo 0 > $LED_GREEN_VAL
+	pinctrl set $LED_GREEN_VAL op dl
 	sleep 1
 done

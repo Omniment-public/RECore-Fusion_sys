@@ -1,13 +1,10 @@
 #!/bin/bash
 
-LED_GREEN_VAL=/sys/class/gpio/gpio23/value
-LED_RED_VAL=/sys/class/gpio/gpio24/value
-echo "23" > /sys/class/gpio/export
-echo "24" > /sys/class/gpio/export
-echo "out" > /sys/class/gpio/gpio23/direction
-echo "out" > /sys/class/gpio/gpio24/direction
-echo 0 > $LED_GREEN_VAL
-echo 0 > $LED_RED_VAL
+LED_GREEN_VAL=23
+LED_RED_VAL=24
+
+pinctrl set $LED_GREEN_VAL op dl
+pinctrl set $LED_RED_VAL op dl
 
 #無線モード
 wlan_mode=$(</usr/local/bin/recore/files/wlan_mode)
@@ -59,11 +56,11 @@ then
 	sudo service dhcpcd restart
 	sudo systemctl restart hostapd.service
 
-	echo 1 > $LED_GREEN_VAL
-	echo 1 > $LED_RED_VAL
+	pinctrl set $LED_GREEN_VAL op dh
+	pinctrl set $LED_RED_VAL op dh
 else
-	echo 1 > $LED_GREEN_VAL
-	echo 0 > $LED_RED_VAL
+	pinctrl set $LED_GREEN_VAL op dh
+	pinctrl set $LED_RED_VAL op dl
 fi
 
 docker start recore-lighttpd
