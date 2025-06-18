@@ -15,10 +15,6 @@ AP_GW="192.168.5.1"
 CON_AP="recore-ap"
 CON_STA="recore-sta"          # 既に nmcli で設定済み想定
 NMCLI="/usr/bin/nmcli"
-CONF=/etc/hostapd/hostapd.conf
-
-# アップデータ確認
-sudo bash /usr/local/bin/recore/files/update.sh
 
 #無線モード
 wlan_mode=$(</usr/local/bin/recore/files/wlan_mode)
@@ -38,21 +34,24 @@ fi
 WLAN_MODE=$(</usr/local/bin/recore/files/wlan_mode)    # 0=STA /1=AP
 #logger -t boot_recore "start wlan_mode=$WLAN_MODE"
 
+# アップデータ確認
+sudo bash /usr/local/bin/recore/files/update.sh
+
 ### 1. STA モード
 if [[ "$WLAN_MODE" == "0" ]]; then
     echo "=== STA Mode ==="
     # NM に管理を戻し、STA 接続を有効化
     $NMCLI device set $WLAN managed yes
-    $NMCLI connection up "$CON_STA" || true   # 失敗しても先へ
+    $NMCLI connection up "$CON_STA"
 
     # 不要サービス停止
-    systemctl stop hostapd || true
-    systemctl stop dnsmasq || true
+    systemctl stop hostapd
+    systemctl stop dnsmasq
     ip addr flush dev $WLAN
 
     # 接続確認 (10 s)
     sleep 10
-    WLAN_STATE=$(iwgetid -r || true)
+    WLAN_STATE=$(iwgetid -r)
     echo "current SSID: $WLAN_STATE"
 else
     WLAN_STATE=""
@@ -62,7 +61,7 @@ fi
 if [[ -z "$WLAN_STATE" ]]; then
     echo "=== AP Mode ==="
     # NM から一時的に外す（hostapd が直接制御）
-    $NMCLI device set $WLAN managed no || true
+    $NMCLI device set $WLAN managed no
 
     # 既存 AP 接続を削除・再作成しても良い
     ip link set $WLAN down
@@ -89,8 +88,8 @@ else
     pinctrl set $LED_RED   op dl
 fi
 
-docker start recore-lighttpd || true
-docker start recore-jupyter   || true
+docker start recore-lighttpd
+docker start recore-jupyter
 
 #logger -t boot_recore "end mode=$( [[ -z $WLAN_STATE ]] && echo AP || echo STA )"
 exit 0
