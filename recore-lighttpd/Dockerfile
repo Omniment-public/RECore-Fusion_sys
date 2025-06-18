@@ -14,7 +14,7 @@ ENV LANG ja_JP.UTF-8
 ENV LANGUAGE ja_JP:ja
 ENV LC_ALL ja_JP.UTF-8
 
-RUN apt-get install -qy apt-utils locales locales-all sudo git vim wget unzip python3 python3-pip lighttpd wireless-tools systemctl curl && apt-get -qy autoremove && apt-get clean
+RUN apt-get install -qy apt-utils locales locales-all sudo git vim wget unzip python3 python3-pip lighttpd wireless-tools systemctl curl iw && apt-get -qy autoremove && apt-get clean
 #RUN apt-get install -qy git
 #RUN apt-get install -qy vim
 #RUN apt-get install -qy wget
@@ -57,5 +57,7 @@ RUN mkdir /usr/local/bin/recore/recore-firmware/
 COPY ./firmware/ /usr/local/bin/recore/recore-firmware/
 RUN chmod +x /usr/local/bin/recore/recore-firmware/RECore_uart_writer_silent_aarc64
 
+RUN echo 'www-data ALL=(root) NOPASSWD:/usr/sbin/iw' \ > /etc/sudoers.d/iw-scan
+RUN chmod 440 /etc/sudoers.d/iw-scan
 #docker build -t lighttpd-recore .
 #docker run -d --name lighttpd --restart=always --net=host --privileged -p 80:80  -v /etc/hostname:/etc/hostname -v /usr/local/bin/recore/files:/usr/local/bin/recore/files -v /usr/local/bin/recore/updater:/usr/local/bin/recore/updater -v /etc/hostapd/hostapd.conf:/etc/hostapd/hostapd.conf -v /etc/wpa_supplicant/wpa_supplicant.conf:/etc/wpa_supplicant/wpa_supplicant.conf lighttpd-recore lighttpd -f /etc/lighttpd/lighttpd.conf -D
