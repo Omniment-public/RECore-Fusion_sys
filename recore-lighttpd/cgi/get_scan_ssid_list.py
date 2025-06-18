@@ -1,28 +1,36 @@
-import json
-import subprocess
-import re
+#!/usr/bin/env python3
+import subprocess, re, json, glob, pathlib, os, sys
 
-#check registered ssid
-conf = open('/etc/wpa_supplicant/wpa_supplicant.conf',mode='r')
-read_conf = conf.read()
-conf.close()
-ssid_list = re.findall('ssid=.*\n',read_conf)
+CONF_DIR = pathlib.Path("/etc/wpa_supplicant")
 
-trim_list = []
-for pick_ssid in ssid_list:
-	trim_list.append(pick_ssid.strip().replace('ssid=','').replace('"',''))
+# ---------- 1. 登録済み SSID を収集 ----------
+candidates = []
 
+# (a) 単一ファイル方式
+if (CONF_DIR / "wpa_supplicant.conf").is_file():
+    candidates.append(CONF_DIR / "wpa_supplicant.conf")
+else:
+    # (b) iface ごとの *.conf ファイル方式
+    candidates.extend(glob.glob(str(CONF_DIR / "*.conf")))
 
-stdout = subprocess.check_output("sudo iwlist wlan0 scan | grep 'ESSID:\".\+\"'",shell=True)
-stdstr = stdout.decode().rstrip()
-ssid_list = [line.lstrip('ESSID:').strip('"') for line in stdstr.split()]
+files = [p for p in candidates if pathlib.Path(p).is_file()]
 
-for pick_ssid in trim_list:
-	ssid_list.remove(pick_ssid)
+registered = set()
+pattern = re.compile(r'^\s*ssid="([^"]+)"', re.MULTILINE)
 
-ssid_json = []
+for path in files:
+    try:
+        with open(path) as f:
+            registered.update(pattern.findall(f.read()))
+    except Exception as e:
+        print(f"warn: cannot read {path}: {e}", file=sys.stderr)
 
-for ssid in ssid_list:
-	ssid_json.append({'ssid':ssid})
+# ---------- 2. 近隣の SSID をスキャン ----------
+scan_raw = subprocess.check_output(
+    ["sudo", "iw", "dev", "wlan0", "scan"], text=True, stderr=subprocess.DEVNULL
+)
+scanned = set(re.findall(r'SSID: (.+)', scan_raw))
 
-print(json.dumps(ssid_json),end='')
+# ---------- 3. 未登録 SSID を JSON 出力 ----------
+unregistered = sorted(scanned - registered)
+print(json.dumps([{"ssid": s} for s in unregistered]), end="")
