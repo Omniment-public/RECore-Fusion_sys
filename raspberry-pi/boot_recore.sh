@@ -1,7 +1,6 @@
 #!/bin/bash
 # ReCore Wi-Fi mode switcher (NM 版)
 #   0 → STA   1 → 強制 AP
-set -euxo pipefail
 
 LED_GREEN=23
 LED_RED=24
@@ -16,10 +15,25 @@ AP_GW="192.168.5.1"
 CON_AP="recore-ap"
 CON_STA="recore-sta"          # 既に nmcli で設定済み想定
 NMCLI="/usr/bin/nmcli"
+CONF=/etc/hostapd/hostapd.conf
+
+# アップデータ確認
+sudo bash /usr/local/bin/recore/files/update.sh
+
+#無線モード
+wlan_mode=$(</usr/local/bin/recore/files/wlan_mode)
 
 # 自動チャネル選択 (失敗時は ch6)
-/usr/bin/python3 /usr/local/bin/recore/files/wlan_autochannel.py \
- || sed -i 's/^channel=.*/channel=6/' /etc/hostapd/hostapd.conf
+sudo python3 /usr/local/bin/recore/files/wlan_autochannel.py
+#/usr/bin/python3 /usr/local/bin/recore/files/wlan_autochannel.py
+rc=$?
+
+if [[ $rc -ne 0 && -f /etc/hostapd/hostapd.conf ]]; then      # Python失敗＋confがある
+    echo "[boot_recore] autochannel error (rc=$rc) → fallback to channel 6"
+    sed -i 's/^channel=.*/channel=6/' /etc/hostapd/hostapd.conf
+elif [[ $rc -ne 0 ]]; then                                    # conf が無いならスキップ
+    echo "[boot_recore] autochannel error (rc=$rc) but /etc/hostapd/hostapd.conf not found; skip fallback"
+fi
 
 WLAN_MODE=$(</usr/local/bin/recore/files/wlan_mode)    # 0=STA /1=AP
 #logger -t boot_recore "start wlan_mode=$WLAN_MODE"
