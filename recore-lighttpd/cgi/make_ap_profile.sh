@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ------------ user-configurable defaults -------------
-PROFILE="recore-ap"              # 固定
+PROFILE="ap-recore"              # 固定
 WLAN="wlan0"                      # Wi-Fi IF name
 
 SSID="${1:-recore-fusion}"        # $1 が空ならデフォルト
