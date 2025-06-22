@@ -1,12 +1,33 @@
 import re
 import json
-
+import subprocess
 # ap_ssid_load
-conf = open('/etc/hostapd/hostapd.conf',mode='r')
-read_conf = conf.read()
-conf.close()
+#conf = open('/etc/hostapd/hostapd.conf',mode='r')
+#read_conf = conf.read()
+#conf.close()
+ssid=""
+def get_nm_ssid(profile_name: str) -> str | None:
+    """
+    Return SSID string of a NetworkManager connection profile.
+    Uses `nmcli -t -f 802-11-wireless.ssid connection show <profile_name>`.
+    """
+    try:
+        # -t (terse) で「<ssid>\n」だけ取得
+        ssid = subprocess.check_output(
+            ["nmcli", "-g", "802-11-wireless.ssid", "connection", "show", profile_name],
+            text=True
+        ).strip()
+        # 空文字列の場合は未設定
+        return ssid or None
+    except subprocess.CalledProcessError:
+        return None
 
-ssid = re.search('ssid=.*\n',read_conf).group().rstrip().replace('ssid=','')
+# ---- SSID ----
+ssid = get_nm_ssid("ap-recore")
+if ssid is None:
+    ssid = "unknown"   # fallback
+
+#ssid = re.search('ssid=.*\n',read_conf).group().rstrip().replace('ssid=','')
 
 # hostname load
 conf = open('/etc/hostname',mode='r')
