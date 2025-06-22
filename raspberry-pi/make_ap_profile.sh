@@ -1,43 +1,47 @@
 #!/bin/bash
-# create_ap_profile.sh  ― ReCore の AP 用 NetworkManager プロファイルを作成／更新
-# Usage: sudo create_ap_profile.sh [<ssid> [<passphrase> [<channel>]]]
-# 省略時: ssid=recore-fusion, pass=rec0re@ap, channel=6
-
 set -euo pipefail
 
-WLAN=wlan0
-PROFILE="recore-ap"
+# ------------ user-configurable defaults -------------
+PROFILE="recore-ap"              # 固定
+WLAN="wlan0"                      # Wi-Fi IF name
 
-SSID="${1:-recore-fusion}"
-PASS="${2:-recore}"
-CHAN="${3:-6}"              # 1,6,11 のいずれかを推奨
+SSID="${1:-recore-fusion}"        # $1 が空ならデフォルト
+PASS="${2:-recorefusion}"         # 8–63 文字。空ならオープン AP
+CHAN="${3:-6}"                    # 1 / 6 / 11 推奨
+# ------------------------------------------------------
 
-# 1. 既存プロファイル確認
-if nmcli -t -f NAME connection | grep -qx "$PROFILE"; then
-    echo "[create_ap_profile] update existing profile: $PROFILE"
-else
-    echo "[create_ap_profile] create new profile: $PROFILE"
-    nmcli connection add type wifi ifname "$WLAN" con-name "$PROFILE" >/dev/null
-fi
+echo "[make_ap_profile] recreate \"$PROFILE\" (SSID=$SSID, CH=$CHAN)"
 
-# 2. 共通プロパティを設定
+# 既存プロファイルがあれば削除。無ければエラーだが || true で無視
+nmcli connection delete "$PROFILE" >/dev/null 2>&1 || true
+
+# 新規追加 (SSID は必須)
+nmcli connection add type wifi ifname "$WLAN" con-name "$PROFILE" ssid "$SSID" >/dev/null
+
+# 共通パラメータ
 nmcli connection modify "$PROFILE" \
     802-11-wireless.mode ap \
-    802-11-wireless.ssid "$SSID" \
     802-11-wireless.band bg \
     802-11-wireless.channel "$CHAN" \
-    802-11-wireless-security.key-mgmt wpa-psk \
-    802-11-wireless-security.psk "$PASS" \
-    dhcp-range=192.168.5.2,192.168.5.254,255.255.255.0,12h
+    802-11-wireless.ssid "$SSID" \
     ipv4.method shared \
+    ipv4.addresses 192.168.5.1/24 \
     ipv6.method ignore \
     connection.autoconnect yes \
     connection.autoconnect-priority 1
 
-# 3. パーミッションを再設定（NM 要件: root:root 600）
-CONF_PATH="/etc/NetworkManager/system-connections/${PROFILE}.nmconnection"
-if [ -f "$CONF_PATH" ]; then
-    chmod 600 "$CONF_PATH"
+# セキュリティ設定
+if [[ -z "$PASS" ]]; then
+    nmcli connection modify "$PROFILE" 802-11-wireless-security.key-mgmt none
+    echo "[make_ap_profile] open network (no PSK)"
+else
+    nmcli connection modify "$PROFILE" \
+        802-11-wireless-security.key-mgmt wpa-psk \
+        802-11-wireless-security.psk "$PASS"
+    echo "[make_ap_profile] WPA2-PSK set"
 fi
 
-echo "[create_ap_profile] done → SSID=$SSID  CH=$CHAN"
+# プロファイルを有効化
+nmcli connection up "$PROFILE"
+
+echo "[make_ap_profile] complete"

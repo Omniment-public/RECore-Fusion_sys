@@ -17,9 +17,6 @@ NMCLI=/usr/bin/nmcli
 SSID="recore-fusion"
 AP_IP="192.168.5.1/24"
 AP_GW="192.168.5.1"
-#CON_AP="recore-ap"
-CON_STA="recore-sta"          # 既に nmcli で設定済み想定
-NMCLI="/usr/bin/nmcli"
 
 # アップデータ確認
 sudo bash /usr/local/bin/recore/files/update.sh
@@ -55,7 +52,7 @@ if [[ -z "$WLAN_STATE" ]]; then
     fi
 
 	# AP プロファイルを up （NM が hostapd + 内蔵 dnsmasq を自動起動）
-    nmcli connection up $CON_AP
+    sudo nmcli connection up $CON_AP
 
     # LED: 緑=ON 赤=ON
     pinctrl set $LED_GREEN op dh
