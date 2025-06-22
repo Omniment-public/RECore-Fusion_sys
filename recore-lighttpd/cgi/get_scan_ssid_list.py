@@ -14,7 +14,7 @@ WLAN = "wlan0"
 
 # ---------- 1. nmcli で再スキャン＆SSID 一覧取得 ----------
 def nmcli_scan():
-    cmd = ["nmcli", "-t", "-f", "SSID", "device", "wifi",
+    cmd = ["sudo" "nmcli", "-t", "-f", "SSID", "device", "wifi",
            "list", "--rescan", "yes", "ifname", WLAN]
     try:
         out = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)

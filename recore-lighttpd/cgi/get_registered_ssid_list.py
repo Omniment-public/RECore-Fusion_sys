@@ -10,12 +10,23 @@ def nmcli(*args):
         raise
 
 # --- Wi-Fi プロファイル名一覧 ---
+# ① TYPE が Wi-Fi のものを列挙
 names = nmcli("-t", "-f", "NAME,TYPE", "connection", "show").splitlines()
-wifi_names = [
-    line.split(":")[0]
-    for line in names
-    if re.search(r':(wifi|802-11-wireless)$', line)
-]
+
+# ② mode が ap でないものだけ残す
+wifi_names = []
+for line in names:
+    if not re.search(r':(wifi|802-11-wireless)$', line):
+        continue
+    name = line.split(":")[0]
+    # mode は '' または 'infrastructure' が STA、'ap' が AP
+    try:
+        mode = nmcli("-g", "802-11-wireless.mode", "connection", "show", name).strip()
+    except subprocess.CalledProcessError:
+        mode = ""
+    if mode == "ap":
+        continue          # AP 用プロファイルはスキップ
+    wifi_names.append(name)
 
 # --- SSID を収集 ---
 registered = set()
