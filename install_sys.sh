@@ -37,7 +37,7 @@ pip install --break-system-packages -U pip
 
 # install apps
 echo "install apps"
-apt-get -qy install hostapd dnsmasq ifmetric
+apt-get -qy install hostapd ifmetric
 
 apt-get -qy install git unzip vim
 
@@ -79,12 +79,12 @@ mv -f $INSTALL_DIR/raspberry-pi/blink.sh $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/config/rc.local /etc/
 mv -f $INSTALL_DIR/raspberry-pi/config/sysctl.conf /etc/
 mv -f $INSTALL_DIR/raspberry-pi/wlan_autochannel.py $SYS_DIR
-mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.ap.conf $SYS_DIR
-mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.sta.conf $SYS_DIR
+#mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.ap.conf $SYS_DIR
+#mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.sta.conf $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/make_ap_profile.sh $SYS_DIR
 
 mv -f $INSTALL_DIR/raspberry-pi/config/hostapd.conf /etc/hostapd
-mv -f $INSTALL_DIR/raspberry-pi/config/dnsmasq.conf /etc/
+# mv -f $INSTALL_DIR/raspberry-pi/config/dnsmasq.conf /etc/
 
 sudo bash -c "echo 0 > $SYS_DIR/wlan_mode"
 chmod 777 $SYS_DIR/wlan_mode

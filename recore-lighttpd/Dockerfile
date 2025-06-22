@@ -57,10 +57,11 @@ RUN mkdir /usr/local/bin/recore/recore-firmware/
 COPY ./firmware/ /usr/local/bin/recore/recore-firmware/
 RUN chmod +x /usr/local/bin/recore/recore-firmware/RECore_uart_writer_silent_aarc64
 
-RUN echo 'www-data ALL=(root) NOPASSWD:/usr/sbin/iw' \ > /etc/sudoers.d/iw-scan
-RUN chmod 440 /etc/sudoers.d/iw-scan
-RUN echo 'www-data ALL=(root) NOPASSWD: /usr/bin/nmcli' > /etc/sudoers.d/90-nmcli \
- && chmod 0440 /etc/sudoers.d/90-nmcli
+RUN echo 'www-data ALL=(root) NOPASSWD:/usr/sbin/iw' > /etc/sudoers.d/iw-scan && chmod 440 /etc/sudoers.d/iw-scan
+RUN echo 'www-data ALL=(root) NOPASSWD: /usr/lib/cgi-bin/make_ap_profile.sh' > /etc/sudoers.d/99-www-test
+RUN echo 'www-data ALL=(root) NOPASSWD: /usr/bin/nmcli' > /etc/sudoers.d/90-nmcli  && chmod 0440 /etc/sudoers.d/90-nmcli
+RUN chmod +x /usr/lib/cgi-bin/make_ap_profile.sh
+
 #RUN setfacl -m u:www-data:rw /etc/wpa_supplicant/wpa_supplicant*.conf
 #docker build -t lighttpd-recore .
 #docker run -d --name lighttpd --restart=always --net=host --privileged -p 80:80  -v /etc/hostname:/etc/hostname -v /usr/local/bin/recore/files:/usr/local/bin/recore/files -v /usr/local/bin/recore/updater:/usr/local/bin/recore/updater -v /etc/hostapd/hostapd.conf:/etc/hostapd/hostapd.conf -v /etc/wpa_supplicant/wpa_supplicant.conf:/etc/wpa_supplicant/wpa_supplicant.conf lighttpd-recore lighttpd -f /etc/lighttpd/lighttpd.conf -D

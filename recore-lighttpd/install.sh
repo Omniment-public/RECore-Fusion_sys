@@ -49,8 +49,8 @@ docker run -d --privileged --net=host \
   -v /etc/NetworkManager/system-connections:/etc/NetworkManager/system-connections:rw \
   -v /var/lib/NetworkManager:/var/lib/NetworkManager \
   -e DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket \
-  --name recore-lighttpd-test \
-  recore-lighttpd-test:$1 \
+  --name recore-lighttpd \
+  recore-lighttpd:$VERSION \
   lighttpd -f /etc/lighttpd/lighttpd.conf -D && RUN_STATE=1
 
 if [ $RUN_STATE = 1 ];then
