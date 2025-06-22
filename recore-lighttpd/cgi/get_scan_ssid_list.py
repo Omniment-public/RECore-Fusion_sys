@@ -1,36 +1,52 @@
 #!/usr/bin/env python3
-import subprocess, re, json, glob, pathlib, os, sys
+"""
+get_scan_ssid_list.py  (NetworkManager 版)
+  1. nmcli で強制スキャン (--rescan yes) を実行
+  2. スキャン結果から SSID を抽出
+  3. /etc/wpa_supplicant/*.conf に既登録の SSID を読み取り
+  4. 未登録だけを JSON で標準出力
+※ sudoers などで www-data が「sudo -n nmcli …」を実行できる前提
+"""
 
+import subprocess, re, glob, pathlib, json, os, sys
+
+WLAN = "wlan0"
+
+# ---------- 1. nmcli で再スキャン＆SSID 一覧取得 ----------
+def nmcli_scan():
+    cmd = ["nmcli", "-t", "-f", "SSID", "device", "wifi",
+           "list", "--rescan", "yes", "ifname", WLAN]
+    try:
+        out = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        # 非 root だと "not authorized" → sudo でリトライ
+        if b"not authorized" in e.output.encode():
+            cmd.insert(0, "-n")          # sudo -n nmcli …
+            cmd.insert(0, "sudo")
+            out = subprocess.check_output(cmd, text=True)
+        else:
+            raise
+    # 空行や重複を除外してセット化
+    return {line for line in out.splitlines() if line.strip()}
+
+scanned = nmcli_scan()
+
+# ---------- 2. 登録済み SSID セットを作成 ----------
 CONF_DIR = pathlib.Path("/etc/wpa_supplicant")
-
-# ---------- 1. 登録済み SSID を収集 ----------
-candidates = []
-
-# (a) 単一ファイル方式
-if (CONF_DIR / "wpa_supplicant.conf").is_file():
-    candidates.append(CONF_DIR / "wpa_supplicant.conf")
-else:
-    # (b) iface ごとの *.conf ファイル方式
-    candidates.extend(glob.glob(str(CONF_DIR / "*.conf")))
-
-files = [p for p in candidates if pathlib.Path(p).is_file()]
+files = ([CONF_DIR / "wpa_supplicant.conf"] if (CONF_DIR / "wpa_supplicant.conf").is_file()
+         else glob.glob(str(CONF_DIR / "*.conf")))
+files = [p for p in files if pathlib.Path(p).is_file()]
 
 registered = set()
-pattern = re.compile(r'^\s*ssid="([^"]+)"', re.MULTILINE)
-
-for path in files:
+pat = re.compile(r'^\s*ssid="([^"]+)"', re.MULTILINE)
+for p in files:
     try:
-        with open(path) as f:
-            registered.update(pattern.findall(f.read()))
-    except Exception as e:
-        print(f"warn: cannot read {path}: {e}", file=sys.stderr)
+        with open(p) as f:
+            registered.update(pat.findall(f.read()))
+    except Exception:
+        pass
 
-# ---------- 2. 近隣の SSID をスキャン ----------
-scan_raw = subprocess.check_output(
-    ["sudo", "iw", "dev", "wlan0", "scan"], text=True, stderr=subprocess.DEVNULL
-)
-scanned = set(re.findall(r'SSID: (.+)', scan_raw))
-
-# ---------- 3. 未登録 SSID を JSON 出力 ----------
+# ---------- 3. 差集合を JSON で返す ----------
 unregistered = sorted(scanned - registered)
+print("Content-Type: application/json\n")
 print(json.dumps([{"ssid": s} for s in unregistered]), end="")

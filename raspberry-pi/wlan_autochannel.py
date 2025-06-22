@@ -1,5 +1,5 @@
 import subprocess
-import re
+import sys
 
 stdout = subprocess.check_output("sudo iwlist wlan0 scan | grep 'Channel:'", shell=True)
 stdstr = stdout.decode().rstrip()
@@ -14,14 +14,5 @@ for i in stdstr:
 print(channel_list)
 
 use_ch = channel_list.index(min(channel_list)) + 1
-
-conf = open('/etc/hostapd/hostapd.conf',mode='r')
-write_conf = conf.read()
-conf.close()
-
-re.search('channel=[0-9]{,2}',write_conf)
-write_conf = re.sub('channel=[0-9]{,2}','channel='+str(use_ch),write_conf)
-
-conf = open('/etc/hostapd/hostapd.conf',mode='w')
-conf.write(write_conf)
-conf.close()
+print(use_ch)
+sys.exit(0)
