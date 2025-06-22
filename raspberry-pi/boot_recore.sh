@@ -36,11 +36,14 @@ if [[ "$WLAN_MODE" == "0" ]]; then
     
     sleep 10
 
-    # 接続試行
-    if nmcli -t -f DEVICE,STATE,CONNECTION device status | grep -q '^wlan0:connected:'; then
-        WLAN_STATE="CONNECT"   # 成功
+    if nmcli -t -f DEVICE,STATE,CONNECTION device status \
+        | awk -F: '$1=="wlan0" && $2~/connected/ && $3!="ap-recore"' \
+        | grep -q .; then
+        WLAN_STATE="CONNECT"
+        echo "sta connected"
     else
-        WLAN_STATE=""          # 失敗
+        WLAN_STATE=""
+        echo "sta no connected"
     fi
 else
     WLAN_STATE=""
