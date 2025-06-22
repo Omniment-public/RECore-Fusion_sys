@@ -71,6 +71,7 @@ chmod +x $INSTALL_DIR/raspberry-pi/update.sh
 chmod +x $INSTALL_DIR/raspberry-pi/blink.sh
 chmod +x $INSTALL_DIR/raspberry-pi/config/rc.local
 chmod +x $INSTALL_DIR/raspberry-pi/wlan_autochannel.py
+chmod +x $INSTALL_DIR/raspberry-pi/make_ap_profile.sh
 
 mv -f $INSTALL_DIR/raspberry-pi/boot_recore.sh $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/update.sh $SYS_DIR
@@ -80,6 +81,7 @@ mv -f $INSTALL_DIR/raspberry-pi/config/sysctl.conf /etc/
 mv -f $INSTALL_DIR/raspberry-pi/wlan_autochannel.py $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.ap.conf $SYS_DIR
 mv -f $INSTALL_DIR/raspberry-pi/config/dhcpcd.sta.conf $SYS_DIR
+mv -f $INSTALL_DIR/raspberry-pi/make_ap_profile.sh $SYS_DIR
 
 mv -f $INSTALL_DIR/raspberry-pi/config/hostapd.conf /etc/hostapd
 mv -f $INSTALL_DIR/raspberry-pi/config/dnsmasq.conf /etc/
@@ -106,3 +108,6 @@ sudo bash -c "echo 'dtoverlay=gpio-shutdown,gpio_pin=18,debounce=2000' >> /boot/
 # write new system
 sudo bash -c "echo 'dtoverlay=miniuart-bt' >> /boot/firmware/config.txt"
 sudo bash -c "echo 'dtoverlay=gpio-shutdown,gpio_pin=18,debounce=2000' >> /boot/firmware/config.txt"
+
+# make ap profile
+sudo /usr/local/bin/recore/files/make_ap_profile.sh
